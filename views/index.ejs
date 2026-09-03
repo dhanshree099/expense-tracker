@@ -1,0 +1,21 @@
+<h2>Welcome <%= user.name %></h2>
+
+<form method="POST" action="/expenses/add">
+  <input name="title" placeholder="Title" />
+  <input name="amount" placeholder="Amount" />
+  <input name="category" placeholder="Category" />
+  <button>Add Expense</button>
+</form>
+
+<h3>Your Expenses</h3>
+
+<ul>
+  <% expenses.forEach(e => { %>
+    <li>
+      <%= e.title %> - ₹<%= e.amount %> (<%= e.category %>)
+      <a href="/expenses/delete/<%= e._id %>">Delete</a>
+    </li>
+  <% }) %>
+</ul>
+
+<a href="/logout">Logout</a>
