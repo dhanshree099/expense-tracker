@@ -1,9 +1,160 @@
-<div style="width:200px; height:100vh; background:#333; color:white; padding:20px; position:fixed;">
-    <h2>Menu</h2>
-    
-    <a href="/dashboard" style="color:white; display:block; margin:10px 0;">Dashboard</a>
-    
-    <a href="/dashboard" style="color:white; display:block; margin:10px 0;">Add Expense</a>
-    
-    <a href="/logout" style="color:white; display:block; margin:10px 0;">Logout</a>
+<div class="sidebar">
+
+    <div class="logo">
+        💰
+        <span>Expense Tracker</span>
+    </div>
+
+    <div class="menu">
+
+        <a href="/dashboard" class="menu-item">
+            📊
+            <span>Dashboard</span>
+        </a>
+
+        <a href="/add-expense" class="menu-item">
+            ➕
+            <span>Add Expense</span>
+        </a>
+
+        <a href="/logout" class="menu-item logout">
+            🚪
+            <span>Logout</span>
+        </a>
+
+    </div>
+
 </div>
+
+
+<style>
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .sidebar {
+
+        width: 230px;
+
+        height: 100vh;
+
+        position: fixed;
+
+        left: 0;
+
+        top: 0;
+
+        background: linear-gradient(
+            180deg,
+            #667eea,
+            #764ba2
+        );
+
+        color: white;
+
+        padding: 25px 15px;
+
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+
+        z-index: 1000;
+
+        font-family: 'Poppins', sans-serif;
+    }
+
+
+    /* LOGO */
+
+    .logo {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 10px;
+
+        font-size: 19px;
+
+        font-weight: 700;
+
+        padding: 10px;
+
+        margin-bottom: 35px;
+    }
+
+
+    .logo:first-letter {
+        font-size: 25px;
+    }
+
+
+    /* MENU */
+
+    .menu {
+
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 10px;
+    }
+
+
+    .menu-item {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 13px;
+
+        color: white;
+
+        text-decoration: none;
+
+        padding: 13px 15px;
+
+        border-radius: 10px;
+
+        font-size: 14px;
+
+        font-weight: 500;
+
+        transition: all 0.3s ease;
+    }
+
+
+    .menu-item:hover {
+
+        background: rgba(255, 255, 255, 0.18);
+
+        transform: translateX(5px);
+    }
+
+
+    .menu-item.logout {
+
+        margin-top: 25px;
+
+        background: rgba(255, 255, 255, 0.10);
+    }
+
+
+    .menu-item.logout:hover {
+
+        background: rgba(255, 255, 255, 0.25);
+    }
+
+
+    /* MOBILE */
+
+    @media (max-width: 700px) {
+
+        .sidebar {
+
+            width: 190px;
+        }
+
+    }
+
+</style>
