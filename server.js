@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const session = require("express-session");
+const morgan = require("morgan");
 require("dotenv").config();
 
 const app = express();
@@ -10,7 +11,8 @@ const app = express();
 app.set("view engine", "ejs");
 
 app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use(express.static("public"));
+app.use(morgan("dev"));
 app.use(
     session({
         secret: "expense-secret-key",
@@ -18,7 +20,18 @@ app.use(
         saveUninitialized: false
     })
 );
+app.use(async (req, res, next) => {
 
+    if (req.session.userId) {
+        const user = await User.findById(req.session.userId);
+
+        if (user) {
+            res.locals.username = user.username;
+        }
+    }
+
+    next();
+});
 
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("MongoDB Connected"))
@@ -53,7 +66,16 @@ const expenseSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    date: String,
+
+    category: {
+        type: String,
+        required: true,
+        default: "General"
+    },
+    date: {
+        type: Date,
+        default: Date.now
+    },
     time: String,
 
     userId: mongoose.Schema.Types.ObjectId
@@ -152,40 +174,77 @@ app.post("/login", async (req, res) => {
     }
 });
 
+app.get("/profile", isLoggedIn, async (req, res) => {
+    try {
+
+        const user = await User.findById(req.session.userId);
+
+        const totalExpenses = await Expense.countDocuments({
+            userId: req.session.userId
+        });
+
+        res.render("profile", {
+            user,
+            totalExpenses
+        });
+
+    } catch (err) {
+        console.log(err);
+        res.send("Profile Error");
+    }
+});
 
 app.get("/dashboard", isLoggedIn, async (req, res) => {
-
     try {
 
         const search = req.query.search || "";
 
+        const user = await User.findById(req.session.userId);
+
+        const today = new Date().toLocaleDateString('en-GB');
+        const currentMonth = new Date().getMonth();
+        const currentYear = new Date().getFullYear();
         const expenses = await Expense.find({
             userId: req.session.userId,
-            name: {
-                $regex: search,
-                $options: "i"
-            }
-        }).sort({
-            _id: -1
-        });
+            name: { $regex: search, $options: "i" }
+        }).sort({ date: -1 });
+        const monthExpense = expenses
+            .filter(exp => {
+                const d = new Date(exp.date);
 
-        const totalExpense = expenses.reduce(
-            (sum, expense) => sum + expense.amount,
-            0
-        );
+                return (
+                    d.getMonth() === currentMonth &&
+                    d.getFullYear() === currentYear
+                );
+            })
+            .reduce((sum, exp) => sum + exp.amount, 0);
+
+
+
+        const todayExpense = expenses
+            .filter(exp =>
+                new Date(exp.date).toLocaleDateString('en-GB') === today
+            )
+            .reduce((sum, exp) => sum + exp.amount, 0);
+
+
+        const totalExpense = expenses.reduce((sum, exp) => sum + exp.amount, 0);
 
         res.render("dashboard", {
             expenses,
             totalExpense,
-            search
+            todayExpense,
+            monthExpense,
+            search,
+            name: user.username
         });
+
 
     } catch (err) {
         console.log(err);
         res.send("Dashboard Error");
     }
 });
-
 
 app.get("/add", isLoggedIn, (req, res) => {
     res.render("add-expense");
@@ -197,13 +256,14 @@ app.post("/add-expense", isLoggedIn, async (req, res) => {
 
     try {
 
-        const { name, amount } = req.body;
+        const { name, amount,category,date} = req.body;
 
         const newExpense = new Expense({
             name,
             amount,
-            date: new Date().toLocaleDateString(),
-            time: new Date().toLocaleTimeString(),
+            category,
+            date: new Date(date),
+            time: new Date().toLocaleTimeString('en-IN'),
             userId: req.session.userId
         });
 
@@ -216,7 +276,6 @@ app.post("/add-expense", isLoggedIn, async (req, res) => {
         res.send("Error Adding Expense");
     }
 });
-
 app.get("/edit-expense/:id", isLoggedIn, async (req, res) => {
 
     try {
@@ -245,7 +304,7 @@ app.post("/edit-expense/:id", isLoggedIn, async (req, res) => {
 
     try {
 
-        const { name, amount } = req.body;
+        const { name, amount, category } = req.body;
 
         await Expense.findOneAndUpdate(
             {
@@ -254,7 +313,8 @@ app.post("/edit-expense/:id", isLoggedIn, async (req, res) => {
             },
             {
                 name,
-                amount
+                amount,
+                category
             }
         );
 

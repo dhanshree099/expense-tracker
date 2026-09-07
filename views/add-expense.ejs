@@ -1,361 +1,271 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Add Expense - Expense Tracker</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
-        rel="stylesheet"
-    >
-
-    <style>
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-
-            background: #f4f6fb;
-
-            color: #333;
-
-            min-height: 100vh;
-        }
-
-
-        /* ================= SIDEBAR SPACE ================= */
-
-        .main {
-            margin-left: 220px;
-
-            min-height: 100vh;
-
-            padding: 50px;
-        }
-
-
-        /* ================= PAGE HEADING ================= */
-
-        .page-title {
-            margin-bottom: 30px;
-        }
-
-        .page-title h1 {
-            font-size: 30px;
-
-            color: #333;
-
-            margin-bottom: 5px;
-        }
-
-        .page-title p {
-            color: #888;
-
-            font-size: 14px;
-        }
-
-
-        /* ================= CARD ================= */
-
-        .expense-card {
-            background: white;
-
-            max-width: 650px;
-
-            padding: 35px;
-
-            border-radius: 18px;
-
-            box-shadow:
-                0 8px 25px rgba(0, 0, 0, 0.08);
-        }
-
-
-        .expense-card h2 {
-            color: #444;
-
-            margin-bottom: 8px;
-
-            font-size: 22px;
-        }
-
-
-        .expense-card .subtitle {
-            color: #999;
-
-            font-size: 13px;
-
-            margin-bottom: 25px;
-        }
-
-
-        /* ================= FORM ================= */
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-
-        .form-group label {
-            display: block;
-
-            margin-bottom: 8px;
-
-            font-size: 14px;
-
-            font-weight: 600;
-
-            color: #555;
-        }
-
-
-        .form-group input {
-            width: 100%;
-
-            padding: 14px 16px;
-
-            border: 2px solid #eeeeee;
-
-            border-radius: 10px;
-
-            outline: none;
-
-            font-family: 'Poppins', sans-serif;
-
-            font-size: 14px;
-
-            transition: 0.3s;
-        }
-
-
-        .form-group input:focus {
-            border-color: #667eea;
-
-            box-shadow:
-                0 0 10px rgba(102, 126, 234, 0.15);
-        }
-
-
-        /* ================= BUTTON ================= */
-
-        .add-btn {
-            width: 100%;
-
-            padding: 14px;
-
-            border: none;
-
-            border-radius: 10px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #667eea,
-                    #764ba2
-                );
-
-            color: white;
-
-            font-family: 'Poppins', sans-serif;
-
-            font-size: 15px;
-
-            font-weight: 600;
-
-            cursor: pointer;
-
-            transition: 0.3s;
-        }
-
-
-        .add-btn:hover {
-            transform: translateY(-2px);
-
-            box-shadow:
-                0 8px 20px rgba(102, 126, 234, 0.3);
-        }
-
-
-        /* ================= BACK BUTTON ================= */
-
-        .back-btn {
-            display: inline-block;
-
-            margin-top: 20px;
-
-            text-decoration: none;
-
-            color: #667eea;
-
-            font-size: 14px;
-
-            font-weight: 500;
-
-            transition: 0.3s;
-        }
-
-
-        .back-btn:hover {
-            color: #764ba2;
-        }
-
-
-        /* ================= RESPONSIVE ================= */
-
-        @media (max-width: 700px) {
-
-            .main {
-                margin-left: 0;
-
-                padding: 25px;
-            }
-
-
-            .page-title h1 {
-                font-size: 24px;
-            }
-
-
-            .expense-card {
-                padding: 25px;
-            }
-
-        }
-
-    </style>
-
-</head>
-
-
 <body>
-
-
-    <!-- SIDEBAR -->
 
     <%- include("partials/sidebar") %>
 
+        <div class="main">
 
-    <!-- MAIN CONTENT -->
+            <div class="page-header">
+                <div>
+                    <h1>Add Expense</h1>
+                    <p>Track your spending and manage finances efficiently.</p>
+                </div>
 
-    <div class="main">
+                <div class="header-badge">
+                    💰 Expense Manager
+                </div>
+            </div>
 
+            <div class="content-grid">
 
-        <!-- PAGE TITLE -->
+                <div class="expense-form-card">
 
-        <div class="page-title">
+                    <h2>New Expense</h2>
 
-            <h1>
-                💰 Add Expense
-            </h1>
+                    <form action="/add-expense" method="POST">
 
-            <p>
-                Record your spending and keep your finances organized.
-            </p>
+                        <div class="input-box">
+                            <label>Expense Name</label>
+                            <div class="input-wrapper">
+                                <span>📝</span>
+                                <input type="text" name="name" placeholder="Shopping, Food, Fuel..." required>
+                            </div>
+                        </div>
 
-        </div>
+                        <div class="input-box">
+                            <label>Amount</label>
+                            <div class="input-wrapper">
+                                <span>₹</span>
+                                <input type="number" name="amount" placeholder="Enter Amount" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="category">
+                                🏷️ Category
+                            </label>
 
+                            <select id="category" name="category" required>
+                                <option value="">Select Category</option>
+                                <option value="Food">🍔 Food</option>
+                                <option value="Travel">🚗 Travel</option>
+                                <option value="Shopping">🛍️ Shopping</option>
+                                <option value="Bills">💡 Bills</option>
+                                <option value="Health">🏥 Health</option>
+                                <option value="Education">📚 Education</option>
+                                <option value="Entertainment">🎬 Entertainment</option>
+                                <option value="Other">📦 Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="date">
+                                Expense Date
+                            </label>
 
-        <!-- EXPENSE CARD -->
+                            <input type="date" id="date" value="<%= new Date().toISOString().split('T')[0] %>"
+                                name="date" required>
+                        </div>
 
-        <div class="expense-card">
+                        <button class="submit-btn">
+                            Add Expense
+                        </button>
 
-
-            <h2>
-                ➕ Add New Expense
-            </h2>
-
-
-            <p class="subtitle">
-                Enter the details of your expense below.
-            </p>
-
-
-            <form
-                action="/add-expense"
-                method="POST"
-            >
-
-
-                <!-- EXPENSE NAME -->
-
-                <div class="form-group">
-
-                    <label for="name">
-                        Expense Name
-                    </label>
-
-                    <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        placeholder="Example: Shopping"
-                        required
-                    >
+                    </form>
 
                 </div>
 
+                <div class="info-card">
 
-                <!-- AMOUNT -->
+                    <h3>Financial Tips</h3>
 
-                <div class="form-group">
+                    <div class="tip">
+                        💡 Track every expense daily.
+                    </div>
 
-                    <label for="amount">
-                        Amount
-                    </label>
+                    <div class="tip">
+                        📈 Review reports weekly.
+                    </div>
 
-                    <input
-                        type="number"
-                        id="amount"
-                        name="amount"
-                        placeholder="Enter amount ₹"
-                        min="1"
-                        required
-                    >
+                    <div class="tip">
+                        🎯 Set monthly spending goals.
+                    </div>
 
                 </div>
 
-
-                <!-- BUTTON -->
-
-                <button
-                    type="submit"
-                    class="add-btn"
-                >
-                    ➕ Add Expense
-                </button>
-
-
-            </form>
-
-
-            <a
-                href="/dashboard"
-                class="back-btn"
-            >
-                ← Back to Dashboard
-            </a>
-
+            </div>
 
         </div>
-
-
-    </div>
-
 
 </body>
+<style>
+    .form-group select {
+        width: 100%;
+        padding: 14px 16px;
+        border: 2px solid #eeeeee;
+        border-radius: 12px;
+        outline: none;
+        font-size: 14px;
+        font-family: 'Poppins', sans-serif;
+        background: #fff;
+        cursor: pointer;
+        transition: .3s;
+    }
 
-</html>
+    .form-group select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 10px rgba(102, 126, 234, .15);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #555;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 14px 16px;
+        border: 2px solid #eeeeee;
+        border-radius: 12px;
+        outline: none;
+        font-size: 14px;
+        font-family: 'Poppins', sans-serif;
+        transition: all .3s ease;
+        background: #fff;
+    }
+
+    .form-group input:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 12px rgba(102, 126, 234, .15);
+    }
+
+    .form-group input[type="date"] {
+        cursor: pointer;
+        color: #444;
+        font-weight: 500;
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: #f8fafc;
+    }
+
+    .main {
+        margin-left: 260px;
+        padding: 40px;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .page-header h1 {
+        font-size: 36px;
+        font-weight: 700;
+    }
+
+    .page-header p {
+        color: #64748b;
+    }
+
+    .header-badge {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 50px;
+        font-weight: 600;
+    }
+
+    .content-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 25px;
+    }
+
+    .expense-form-card {
+        background: white;
+        border-radius: 24px;
+        padding: 35px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, .08);
+    }
+
+    .expense-form-card h2 {
+        margin-bottom: 25px;
+    }
+
+    .input-box {
+        margin-bottom: 22px;
+    }
+
+    .input-box label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+    }
+
+    .input-wrapper {
+        display: flex;
+        align-items: center;
+        border: 2px solid #edf2f7;
+        border-radius: 14px;
+        overflow: hidden;
+        transition: .3s;
+    }
+
+    .input-wrapper:focus-within {
+        border-color: #667eea;
+    }
+
+    .input-wrapper span {
+        padding: 0 18px;
+        font-size: 18px;
+    }
+
+    .input-wrapper input {
+        border: none;
+        outline: none;
+        width: 100%;
+        padding: 16px;
+        font-size: 15px;
+    }
+
+    .submit-btn {
+        width: 100%;
+        border: none;
+        border-radius: 14px;
+        padding: 16px;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        background: linear-gradient(135deg,
+                #667eea,
+                #764ba2);
+        transition: .3s;
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 25px rgba(102, 126, 234, .3);
+    }
+
+    .info-card {
+        background: white;
+        border-radius: 24px;
+        padding: 30px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, .08);
+    }
+
+    .tip {
+        background: #f8fafc;
+        padding: 15px;
+        border-radius: 12px;
+        margin-top: 15px;
+    }
+</style>

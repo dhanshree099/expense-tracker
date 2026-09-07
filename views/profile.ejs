@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+
+    <link rel="stylesheet" href="/css/profile.css">
+    <style>
+        body {
+            margin: 0;
+            background: #f5f7fb;
+            font-family: Arial, sans-serif;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 30px;
+        }
+
+        .profile-card {
+            max-width: 700px;
+            margin: auto;
+            background: #fff;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, .1);
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #5b4df1;
+            color: white;
+            font-size: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: auto;
+        }
+
+        .profile-details {
+            display: grid;
+            gap: 20px;
+        }
+
+        .detail {
+            background: #f8f9ff;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .detail label {
+            display: block;
+            color: #777;
+            margin-bottom: 5px;
+        }
+
+        .detail span {
+            font-weight: bold;
+        }
+
+        .actions {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            text-decoration: none;
+            padding: 12px 25px;
+            background: #5b4df1;
+            color: white;
+            border-radius: 10px;
+        }
+
+        .logout {
+            background: #dc3545;
+        }
+    </style>
+</head>
+
+<body>
+
+    <%- include('partials/sidebar') %>
+
+        <div class="main-content">
+
+            <div class="profile-card">
+
+                <div class="profile-header">
+                    <div class="avatar">
+                        <%= user.username.charAt(0).toUpperCase() %>
+                    </div>
+
+                    <h1>
+                        <%= user.username %>
+                    </h1>
+                    <p>Expense Tracker User</p>
+                </div>
+
+                <div class="profile-details">
+
+                    <div class="detail">
+                        <label>Username</label>
+                        <span>
+                            <%= user.username %>
+                        </span>
+                    </div>
+
+                    <div class="detail">
+                        <label>User ID</label>
+                        <span>
+                            <%= user._id %>
+                        </span>
+                    </div>
+
+                    <div class="detail">
+                        <label>Total Expenses Added</label>
+                        <span>
+                            <%= totalExpenses %>
+                        </span>
+                    </div>
+
+                    <div class="detail">
+                        <label>Member Since</label>
+                        <span>
+                            <%= user._id.getTimestamp().toLocaleDateString('en-GB') %>
+                        </span>
+                    </div>
+
+                </div>
+
+                <div class="actions">
+                    <a href="/dashboard" class="btn">
+                        Dashboard
+                    </a>
+
+                    <a href="/logout" class="btn logout">
+                        Logout
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+</body>
+
+</html>

@@ -10,10 +10,12 @@
 
     <div class="user-card">
         <div class="avatar">
-            <%= username ? username.charAt(0).toUpperCase() : "U" %>
+            <%= typeof username !=='undefined' && username ? username.charAt(0).toUpperCase() : 'U' %>
         </div>
         <div class="user-info">
-            <h4><%= username || "User" %></h4>
+            <h4>
+                <%= typeof username !=='undefined' ? username : 'User' %>
+            </h4>
             <p>Welcome Back</p>
         </div>
     </div>
@@ -30,11 +32,14 @@
             <span>Add Expense</span>
         </a>
 
-        <a href="/summary" class="menu-item">
+        <!-- <a href="/summary" class="menu-item">
             <span>📈</span>
             <span>Reports</span>
+        </a> -->
+        <a href="/profile" class="menu-item">
+            <span>👤</span>
+            <span>Profile</span>
         </a>
-
         <a href="/logout" class="menu-item logout">
             <span>🚪</span>
             <span>Logout</span>
@@ -44,228 +49,226 @@
 
 </div>
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
-}
-
-.sidebar{
-
-    width:260px;
-    height:100vh;
-
-    position:fixed;
-    left:0;
-    top:0;
-
-    background:linear-gradient(
-        180deg,
-        #4f46e5,
-        #7c3aed
-    );
-
-    color:white;
-
-    padding:20px;
-
-    display:flex;
-    flex-direction:column;
-
-    box-shadow:
-    5px 0 25px rgba(0,0,0,.2);
-
-    overflow:hidden;
-}
-
-/* Logo */
-
-.logo-section{
-
-    display:flex;
-    align-items:center;
-    gap:15px;
-
-    margin-bottom:30px;
-
-    padding-bottom:20px;
-
-    border-bottom:
-    1px solid rgba(255,255,255,.15);
-}
-
-.logo-icon{
-
-    width:55px;
-    height:55px;
-
-    border-radius:15px;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    font-size:26px;
-
-    background:
-    rgba(255,255,255,.15);
-
-    backdrop-filter:blur(10px);
-}
-
-.logo-text h2{
-
-    font-size:20px;
-    font-weight:700;
-}
-
-.logo-text p{
-
-    font-size:12px;
-    opacity:.8;
-}
-
-/* User Card */
-
-.user-card{
-
-    display:flex;
-    align-items:center;
-
-    gap:12px;
-
-    padding:15px;
-
-    background:
-    rgba(255,255,255,.12);
-
-    backdrop-filter:blur(10px);
-
-    border-radius:15px;
-
-    margin-bottom:25px;
-}
-
-.avatar{
-
-    width:45px;
-    height:45px;
-
-    border-radius:50%;
-
-    background:white;
-    color:#4f46e5;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    font-weight:700;
-    font-size:18px;
-}
-
-.user-info h4{
-
-    font-size:15px;
-}
-
-.user-info p{
-
-    font-size:12px;
-    opacity:.8;
-}
-
-/* Menu */
-
-.menu{
-
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-}
-
-.menu-item{
-
-    display:flex;
-    align-items:center;
-
-    gap:14px;
-
-    padding:14px 16px;
-
-    text-decoration:none;
-    color:white;
-
-    border-radius:12px;
-
-    transition:.3s;
-}
-
-.menu-item:hover{
-
-    background:
-    rgba(255,255,255,.15);
-
-    transform:
-    translateX(6px);
-}
-
-.menu-item.active{
-
-    background:white;
-    color:#4f46e5;
-
-    font-weight:600;
-
-    box-shadow:
-    0 5px 15px rgba(0,0,0,.15);
-}
-
-.logout{
-
-    margin-top:auto;
-
-    background:
-    rgba(255,255,255,.08);
-}
-
-.logout:hover{
-
-    background:#ef4444;
-    color:white;
-}
-
-/* Mobile */
-
-@media(max-width:768px){
-
-    .sidebar{
-
-        width:80px;
-        padding:15px;
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
     }
 
-    .logo-text,
-    .user-info,
-    .menu-item span:last-child{
+    .sidebar {
 
-        display:none;
+        width: 260px;
+        height: 100vh;
+
+        position: fixed;
+        left: 0;
+        top: 0;
+
+        background: linear-gradient(180deg,
+                #4f46e5,
+                #7c3aed);
+
+        color: white;
+
+        padding: 20px;
+
+        display: flex;
+        flex-direction: column;
+
+        box-shadow:
+            5px 0 25px rgba(0, 0, 0, .2);
+
+        overflow: hidden;
     }
 
-    .menu-item{
+    /* Logo */
 
-        justify-content:center;
+    .logo-section {
+
+        display: flex;
+        align-items: center;
+        gap: 15px;
+
+        margin-bottom: 30px;
+
+        padding-bottom: 20px;
+
+        border-bottom:
+            1px solid rgba(255, 255, 255, .15);
     }
 
-    .avatar{
+    .logo-icon {
 
-        margin:auto;
+        width: 55px;
+        height: 55px;
+
+        border-radius: 15px;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        font-size: 26px;
+
+        background:
+            rgba(255, 255, 255, .15);
+
+        backdrop-filter: blur(10px);
     }
 
-    .user-card{
+    .logo-text h2 {
 
-        justify-content:center;
+        font-size: 20px;
+        font-weight: 700;
     }
-}
+
+    .logo-text p {
+
+        font-size: 12px;
+        opacity: .8;
+    }
+
+    /* User Card */
+
+    .user-card {
+
+        display: flex;
+        align-items: center;
+
+        gap: 12px;
+
+        padding: 15px;
+
+        background:
+            rgba(255, 255, 255, .12);
+
+        backdrop-filter: blur(10px);
+
+        border-radius: 15px;
+
+        margin-bottom: 25px;
+    }
+
+    .avatar {
+
+        width: 45px;
+        height: 45px;
+
+        border-radius: 50%;
+
+        background: white;
+        color: #4f46e5;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        font-weight: 700;
+        font-size: 18px;
+    }
+
+    .user-info h4 {
+
+        font-size: 15px;
+    }
+
+    .user-info p {
+
+        font-size: 12px;
+        opacity: .8;
+    }
+
+    /* Menu */
+
+    .menu {
+
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .menu-item {
+
+        display: flex;
+        align-items: center;
+
+        gap: 14px;
+
+        padding: 14px 16px;
+
+        text-decoration: none;
+        color: white;
+
+        border-radius: 12px;
+
+        transition: .3s;
+    }
+
+    .menu-item:hover {
+
+        background:
+            rgba(255, 255, 255, .15);
+
+        transform:
+            translateX(6px);
+    }
+
+    .menu-item.active {
+
+        background: white;
+        color: #4f46e5;
+
+        font-weight: 600;
+
+        box-shadow:
+            0 5px 15px rgba(0, 0, 0, .15);
+    }
+
+    .logout {
+
+        margin-top: auto;
+
+        background:
+            rgba(255, 255, 255, .08);
+    }
+
+    .logout:hover {
+
+        background: #ef4444;
+        color: white;
+    }
+
+    /* Mobile */
+
+    @media(max-width:768px) {
+
+        .sidebar {
+
+            width: 80px;
+            padding: 15px;
+        }
+
+        .logo-text,
+        .user-info,
+        .menu-item span:last-child {
+
+            display: none;
+        }
+
+        .menu-item {
+
+            justify-content: center;
+        }
+
+        .avatar {
+
+            margin: auto;
+        }
+
+        .user-card {
+
+            justify-content: center;
+        }
+    }
 </style>
