@@ -1,162 +1,326 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+const session = require("express-session");
+require("dotenv").config();
 
 const app = express();
 
 app.set("view engine", "ejs");
+
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect("mongodb+srv://dhanushelke99_db_user:dhanushelke99@cluster0.vdaavfb.mongodb.net/expense_tracker?appName=Cluster0")
-.then(() => console.log("MongoDB Connected"))
-.catch(err => console.log(err));
+app.use(
+    session({
+        secret: "expense-secret-key",
+        resave: false,
+        saveUninitialized: false
+    })
+);
+
+
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log("MongoDB Connected"))
+    .catch(err => console.log(err));
+
+
+
 
 const userSchema = new mongoose.Schema({
-    username: String,
-    password: String
+    username: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    password: {
+        type: String,
+        required: true
+    }
 });
 
 const User = mongoose.model("User", userSchema);
 
+
+
+
 const expenseSchema = new mongoose.Schema({
-    name: String,
-    amount: Number,
+    name: {
+        type: String,
+        required: true
+    },
+    amount: {
+        type: Number,
+        required: true
+    },
     date: String,
-    time: String
+    time: String,
+
+    userId: mongoose.Schema.Types.ObjectId
 });
 
 const Expense = mongoose.model("Expense", expenseSchema);
 
 
-// Home
+function isLoggedIn(req, res, next) {
+    if (req.session.userId) {
+        return next();
+    }
+
+    res.redirect("/login");
+}
+
+
+
 app.get("/", (req, res) => {
     res.redirect("/signup");
 });
 
 
-// Signup Page
+
 app.get("/signup", (req, res) => {
     res.render("signup");
 });
 
-
-// Signup Logic
 app.post("/signup", async (req, res) => {
-    const { username, password } = req.body;
+    try {
 
-    const newUser = new User({
-        username,
-        password
-    });
+        const { username, password } = req.body;
 
-    await newUser.save();
+        const existingUser = await User.findOne({
+            username
+        });
 
-    res.redirect("/login");
+        if (existingUser) {
+            return res.send("Username already exists");
+        }
+
+        const hashedPassword = await bcrypt.hash(
+            password,
+            10
+        );
+
+        const newUser = new User({
+            username,
+            password: hashedPassword
+        });
+
+        await newUser.save();
+
+        res.redirect("/login");
+
+    } catch (err) {
+        console.log(err);
+        res.send("Signup Error");
+    }
 });
 
-
-// Login Page
 app.get("/login", (req, res) => {
     res.render("login");
 });
 
-
-// Login Logic
 app.post("/login", async (req, res) => {
-    const { username, password } = req.body;
 
-    const user = await User.findOne({
-        username,
-        password
-    });
+    try {
 
-    if (user) {
+        const { username, password } = req.body;
+
+        const user = await User.findOne({
+            username
+        });
+
+        if (!user) {
+            return res.send("Invalid Login");
+        }
+
+        const match = await bcrypt.compare(
+            password,
+            user.password
+        );
+
+        if (!match) {
+            return res.send("Invalid Login");
+        }
+
+        req.session.userId = user._id;
+
         res.redirect("/dashboard");
-    } else {
-        res.send("Invalid Login");
+
+    } catch (err) {
+        console.log(err);
+        res.send("Login Error");
     }
 });
 
 
-// Dashboard
-app.get("/dashboard", async (req, res) => {
-    const expenses = await Expense.find();
+app.get("/dashboard", isLoggedIn, async (req, res) => {
 
-    res.render("dashboard", {
-        expenses
-    });
+    try {
+
+        const search = req.query.search || "";
+
+        const expenses = await Expense.find({
+            userId: req.session.userId,
+            name: {
+                $regex: search,
+                $options: "i"
+            }
+        }).sort({
+            _id: -1
+        });
+
+        const totalExpense = expenses.reduce(
+            (sum, expense) => sum + expense.amount,
+            0
+        );
+
+        res.render("dashboard", {
+            expenses,
+            totalExpense,
+            search
+        });
+
+    } catch (err) {
+        console.log(err);
+        res.send("Dashboard Error");
+    }
 });
 
 
-// Add Page
-app.get("/add", (req, res) => {
+app.get("/add", isLoggedIn, (req, res) => {
     res.render("add-expense");
 });
-// Add Expense
-app.post("/add-expense", async (req, res) => {
-
-    const { name, amount } = req.body;
-
-    const newExpense = new Expense({
-        name,
-        amount,
-        date: new Date().toLocaleDateString(),
-        time: new Date().toLocaleTimeString()
-    });
-
-    await newExpense.save();
-
-    res.redirect("/dashboard");
-});
 
 
-// Edit Expense Page
-app.get("/edit-expense/:id", async (req, res) => {
 
-    const expense = await Expense.findById(req.params.id);
+app.post("/add-expense", isLoggedIn, async (req, res) => {
 
-    if (!expense) {
-        return res.send("Expense not found");
+    try {
+
+        const { name, amount } = req.body;
+
+        const newExpense = new Expense({
+            name,
+            amount,
+            date: new Date().toLocaleDateString(),
+            time: new Date().toLocaleTimeString(),
+            userId: req.session.userId
+        });
+
+        await newExpense.save();
+
+        res.redirect("/dashboard");
+
+    } catch (err) {
+        console.log(err);
+        res.send("Error Adding Expense");
     }
+});
 
-    res.render("edit-expense", {
-        expense
+app.get("/edit-expense/:id", isLoggedIn, async (req, res) => {
+
+    try {
+
+        const expense = await Expense.findOne({
+            _id: req.params.id,
+            userId: req.session.userId
+        });
+
+        if (!expense) {
+            return res.send("Expense Not Found");
+        }
+
+        res.render("edit-expense", {
+            expense
+        });
+
+    } catch (err) {
+        console.log(err);
+        res.send("Edit Error");
+    }
+});
+
+
+app.post("/edit-expense/:id", isLoggedIn, async (req, res) => {
+
+    try {
+
+        const { name, amount } = req.body;
+
+        await Expense.findOneAndUpdate(
+            {
+                _id: req.params.id,
+                userId: req.session.userId
+            },
+            {
+                name,
+                amount
+            }
+        );
+
+        res.redirect("/dashboard");
+
+    } catch (err) {
+        console.log(err);
+        res.send("Update Error");
+    }
+});
+
+
+app.post("/delete-expense/:id", isLoggedIn, async (req, res) => {
+
+    try {
+
+        await Expense.findOneAndDelete({
+            _id: req.params.id,
+            userId: req.session.userId
+        });
+
+        res.redirect("/dashboard");
+
+    } catch (err) {
+        console.log(err);
+        res.send("Delete Error");
+    }
+});
+
+
+app.get("/summary", isLoggedIn, async (req, res) => {
+
+    try {
+
+        const expenses = await Expense.find({
+            userId: req.session.userId
+        });
+
+        const totalExpense = expenses.reduce(
+            (sum, expense) => sum + expense.amount,
+            0
+        );
+
+        res.render("summary", {
+            expenses,
+            totalExpense
+        });
+
+    } catch (err) {
+        console.log(err);
+        res.send("Summary Error");
+    }
+});
+
+
+
+app.get("/logout", (req, res) => {
+
+    req.session.destroy(() => {
+        res.redirect("/login");
     });
 });
 
 
-// Update Expense
-app.post("/edit-expense/:id", async (req, res) => {
+const PORT = process.env.PORT || 3000;
 
-    const { name, amount } = req.body;
-
-    await Expense.findByIdAndUpdate(
-        req.params.id,
-        {
-            name: name,
-            amount: amount
-        }
-    );
-
-    res.redirect("/dashboard");
-});
-
-
-// Delete Expense
-app.post("/delete-expense/:id", async (req, res) => {
-
-    await Expense.findByIdAndDelete(req.params.id);
-
-    res.redirect("/dashboard");
-});
-
-
-// Logout
-app.get("/logout", (req, res) => {
-    res.redirect("/login");
-});
-
-
-app.listen(3000, () => {
-    console.log("Server running on http://localhost:3000");
+app.listen(PORT, () => {
+    console.log(`Server Running on http://localhost:${PORT}`);
 });
