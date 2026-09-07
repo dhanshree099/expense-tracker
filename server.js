@@ -7,7 +7,7 @@ const app = express();
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect("mongodb://127.0.0.1:27017/expensesDB")
+mongoose.connect("mongodb+srv://dhanushelke99_db_user:dhanushelke99@cluster0.vdaavfb.mongodb.net/expense_tracker?appName=Cluster0")
 .then(() => console.log("MongoDB Connected"))
 .catch(err => console.log(err));
 
