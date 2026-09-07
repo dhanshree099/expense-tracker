@@ -1,16 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Expense Tracker - Dashboard</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
-
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <link
@@ -33,22 +30,13 @@
             min-height: 100vh;
         }
 
-
-        /* ================= NAVBAR ================= */
-
         .navbar {
             background: linear-gradient(135deg, #667eea, #764ba2);
-
             color: white;
-
             padding: 18px 7%;
-
             display: flex;
-
             justify-content: space-between;
-
             align-items: center;
-
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
         }
 
@@ -59,16 +47,10 @@
 
         .logout {
             color: white;
-
             text-decoration: none;
-
             padding: 9px 18px;
-
             border-radius: 8px;
-
             background: rgba(255, 255, 255, 0.2);
-
-            transition: 0.3s;
         }
 
         .logout:hover {
@@ -76,19 +58,11 @@
             color: #667eea;
         }
 
-
-        /* ================= MAIN CONTAINER ================= */
-
         .container {
             width: 90%;
-
             max-width: 1100px;
-
             margin: 40px auto;
         }
-
-
-        /* ================= HEADING ================= */
 
         .heading {
             margin-bottom: 30px;
@@ -104,18 +78,11 @@
             margin-top: 5px;
         }
 
-
-        /* ================= ADD EXPENSE ================= */
-
         .expense-form {
             background: white;
-
             padding: 30px;
-
             border-radius: 15px;
-
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-
             margin-bottom: 35px;
         }
 
@@ -126,169 +93,126 @@
 
         .form-row {
             display: grid;
-
             grid-template-columns: 1fr 1fr auto;
-
             gap: 15px;
         }
 
         .form-row input {
             padding: 14px;
-
             border: 2px solid #eee;
-
             border-radius: 9px;
-
             outline: none;
-
             font-family: 'Poppins', sans-serif;
-
             font-size: 14px;
-
-            transition: 0.3s;
         }
 
         .form-row input:focus {
             border-color: #667eea;
-
-            box-shadow: 0 0 8px rgba(102, 126, 234, 0.15);
         }
 
         .add-btn {
             border: none;
-
             padding: 14px 25px;
-
             border-radius: 9px;
-
             background: linear-gradient(135deg, #667eea, #764ba2);
-
             color: white;
-
             font-family: 'Poppins', sans-serif;
-
             font-size: 14px;
-
             font-weight: 600;
-
             cursor: pointer;
-
-            transition: 0.3s;
         }
-
-        .add-btn:hover {
-            transform: translateY(-2px);
-
-            box-shadow: 0 8px 18px rgba(102, 126, 234, 0.3);
-        }
-
-
-        /* ================= TABLE ================= */
 
         .table-container {
             background: white;
-
             padding: 30px;
-
             border-radius: 15px;
-
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-
             overflow-x: auto;
         }
 
         .table-container h2 {
             margin-bottom: 20px;
-
             color: #444;
         }
 
         table {
             width: 100%;
-
             border-collapse: collapse;
         }
 
         thead {
             background: linear-gradient(135deg, #667eea, #764ba2);
-
             color: white;
         }
 
         th {
             padding: 15px;
-
             text-align: left;
-
             font-size: 14px;
-
-            font-weight: 600;
         }
 
         td {
             padding: 15px;
-
             border-bottom: 1px solid #eee;
-
             font-size: 14px;
-
             vertical-align: middle;
-        }
-
-        tbody tr {
-            transition: 0.2s;
         }
 
         tbody tr:hover {
             background: #f7f7ff;
         }
 
-
-        /* ================= AMOUNT ================= */
-
         .amount {
             color: #e74c3c;
-
             font-weight: 600;
-
             white-space: nowrap;
         }
-
-
-        /* ================= DATE ================= */
 
         .date {
             color: #667eea;
-
             font-weight: 500;
-
             min-width: 350px;
         }
 
-
-        /* ================= TIME ================= */
-
         .time {
             color: #888;
-
             font-weight: 500;
-
             white-space: nowrap;
         }
 
+        .edit-btn {
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 7px;
+            display: inline-block;
+            margin-right: 5px;
+        }
 
-        /* ================= EMPTY ================= */
+        .edit-btn:hover {
+            background: #2980b9;
+        }
+
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .delete-btn:hover {
+            background: #c0392b;
+        }
 
         .empty {
             text-align: center;
-
             padding: 30px;
-
             color: #999;
         }
-
-
-        /* ================= RESPONSIVE ================= */
 
         @media (max-width: 700px) {
 
@@ -308,18 +232,14 @@
             td {
                 padding: 10px;
             }
-
         }
 
     </style>
 
 </head>
 
-
 <body>
 
-
-    <!-- ================= NAVBAR ================= -->
 
     <nav class="navbar">
 
@@ -327,22 +247,15 @@
             💰 Expense Tracker
         </h1>
 
-        <a
-            href="/logout"
-            class="logout"
-        >
+        <a href="/logout" class="logout">
             Logout
         </a>
 
     </nav>
 
 
-    <!-- ================= MAIN CONTENT ================= -->
-
     <div class="container">
 
-
-        <!-- ================= HEADING ================= -->
 
         <div class="heading">
 
@@ -357,18 +270,13 @@
         </div>
 
 
-        <!-- ================= ADD EXPENSE ================= -->
-
         <div class="expense-form">
 
             <h2>
                 ➕ Add New Expense
             </h2>
 
-            <form
-                action="/add-expense"
-                method="POST"
-            >
+            <form action="/add-expense" method="POST">
 
                 <div class="form-row">
 
@@ -399,8 +307,6 @@
 
         </div>
 
-
-        <!-- ================= EXPENSE TABLE ================= -->
 
         <div class="table-container">
 
@@ -449,6 +355,10 @@
                                 Time
                             </th>
 
+                            <th>
+                                Action
+                            </th>
+
                         </tr>
 
                     </thead>
@@ -456,34 +366,21 @@
 
                     <tbody>
 
-
                         <% expenses.forEach(exp => { %>
-
 
                             <tr>
 
-
-                                <!-- EXPENSE NAME -->
-
                                 <td>
-
                                     <strong>
                                         <%= exp.name %>
                                     </strong>
-
                                 </td>
 
-
-                                <!-- AMOUNT -->
 
                                 <td class="amount">
-
                                     ₹<%= exp.amount %>
-
                                 </td>
 
-
-                                <!-- DATE -->
 
                                 <td class="date">
 
@@ -515,20 +412,42 @@
                                 </td>
 
 
-                                <!-- TIME -->
-
                                 <td class="time">
-
                                     <%= exp.time %>
-
                                 </td>
 
 
+                                <td>
+
+                                    <a
+                                        href="/edit-expense/<%= exp._id %>"
+                                        class="edit-btn"
+                                    >
+                                        ✏️ Edit
+                                    </a>
+
+
+                                    <form
+                                        action="/delete-expense/<%= exp._id %>"
+                                        method="POST"
+                                        onsubmit="return confirm('Are you sure you want to delete this expense?')"
+                                        style="display:inline;"
+                                    >
+
+                                        <button
+                                            type="submit"
+                                            class="delete-btn"
+                                        >
+                                            🗑️ Delete
+                                        </button>
+
+                                    </form>
+
+                                </td>
+
                             </tr>
 
-
                         <% }) %>
-
 
                     </tbody>
 
@@ -537,13 +456,9 @@
 
             <% } %>
 
-
         </div>
-
 
     </div>
 
-
 </body>
-
 </html>
